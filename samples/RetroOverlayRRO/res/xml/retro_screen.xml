@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<!-- The whole-display overlay: on from boot, spans the display, layer 101 (above the task
+     panels at 100, below the assistant at 200). `retro_on` / `retro_off` toggle it. -->
+<DecorPanel id="retro_screen" defaultVariant="@id/on" displayId="0" controller="@xml/retro_screen_controller">
+    <Variant id="@+id/base">
+        <Layer layer="101"/>
+        <Bounds left="0" top="0" width="100%" height="100%"/>
+        <Focus onTransition="false"/>
+    </Variant>
+    <Variant id="@+id/on" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Alpha alpha="1.0"/>
+    </Variant>
+    <Variant id="@+id/off" parent="@id/base">
+        <Visibility isVisible="false"/>
+        <Alpha alpha="0.0"/>
+    </Variant>
+    <Transitions>
+        <Transition onEvent="retro_on" toVariant="@id/on" duration="0"/>
+        <Transition onEvent="retro_off" toVariant="@id/off" duration="0"/>
+    </Transitions>
+</DecorPanel>

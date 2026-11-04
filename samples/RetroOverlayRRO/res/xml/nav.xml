@@ -1,0 +1,10 @@
+<SystemBar id="nav" defaultVariant="@id/opened" displayId="0" type="navigation" barZOrder="10" hideForKeyboard="true">
+    <Variant id="@+id/base">
+        <Layer layer="251"/>
+        <Bounds left="0px" bottom="100%" width="100%" height="136px"/>
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Bounds left="0px" bottom="100%" width="100%" height="60px"/>
+    </Variant>
+</SystemBar>

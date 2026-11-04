@@ -1,0 +1,36 @@
+<DecorPanel id="retro_overlay" defaultVariant="@id/off" displayId="0" controller="@xml/retro_overlay_controller">
+    <!-- One-panel mode: the look on map_panel alone. Bounds are map_panel's opened bounds, the
+         layer is one above its 2. Three states: off (switched off by retro_off, stays off),
+         on (the look on the map), paused (the map is covered or locked while the look is on;
+         invisible like off, so the controller clears the look, and it comes back with the map).
+         The paused transitions mirror map_panel's own opened/closed events. -->
+    <Variant id="@+id/base">
+        <Layer layer="3"/>
+        <Focus onTransition="false"/>
+        <Bounds left="@dimen/widget_panel_width" top="43px" right="100%" bottom="97.82%" topOffset="@*android:dimen/status_bar_height" rightOffset="40dp" bottomOffset="@*android:dimen/navigation_bar_height"/>
+    </Variant>
+    <Variant id="@+id/on" parent="@id/base">
+        <Alpha alpha="1"/>
+        <Visibility isVisible="true"/>
+    </Variant>
+    <Variant id="@+id/off" parent="@id/base">
+        <Alpha alpha="0"/>
+        <Visibility isVisible="false"/>
+    </Variant>
+    <Variant id="@+id/paused" parent="@id/off">
+    </Variant>
+    <Transitions defaultInterpolator="@android:anim/decelerate_interpolator">
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_EnterSuwEvent"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_BeforeUserSwitch"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_KeyguardShown"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_OnHomeEvent"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId=app_panel"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_ExitSuwEvent"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_UserSwitchComplete"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_KeyguardHidden"/>
+        <Transition toVariant="@id/on" duration="0" onEvent="retro_on"/>
+        <Transition toVariant="@id/off" duration="0" onEvent="retro_off"/>
+    </Transitions>
+</DecorPanel>

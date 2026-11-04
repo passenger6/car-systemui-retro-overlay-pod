@@ -1,0 +1,10 @@
+<TaskPanel id="app_grid_panel" defaultVariant="@id/opened" displayId="0">
+    <Variant id="@+id/base">
+        <Layer layer="252"/>
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Alpha alpha="1"/>
+        <Visibility isVisible="true"/>
+        <Bounds left="100%" top="0%" right="195%" bottom="100%"/>
+    </Variant>
+</TaskPanel>

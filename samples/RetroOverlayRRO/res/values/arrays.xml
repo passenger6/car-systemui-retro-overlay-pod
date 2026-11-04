@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="map_panel_components">
+        <item>@string/default_map_activity</item>
+        <item>com.android.car.carlauncher/.homescreen.MapTosActivity</item>
+        <item>com.snappautomotive.maps/com.snappautomotive.maps.MainActivity</item>
+    </string-array>
+</resources>

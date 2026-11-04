@@ -1,0 +1,35 @@
+<TaskPanel id="map_panel" defaultVariant="@id/opened" displayId="0" role="@array/map_panel_components" controller="@xml/map_panel_controller">
+    <Variant id="@+id/base">
+        <Layer layer="2"/>
+        <Focus onTransition="false"/>
+        <Corner radius="@dimen/map_corner_radius"/>
+        <Bounds left="@dimen/widget_panel_width" top="0px" right="100%" bottom="100%" topOffset="@*android:dimen/status_bar_height" rightOffset="40dp" bottomOffset="@*android:dimen/navigation_bar_height"/>
+    </Variant>
+    <Variant id="@+id/opened" parent="@id/base">
+        <Visibility isVisible="true"/>
+        <Bounds left="@dimen/widget_panel_width" top="43px" right="100%" bottom="97.82%" topOffset="@*android:dimen/status_bar_height" rightOffset="40dp" bottomOffset="@*android:dimen/navigation_bar_height"/>
+    </Variant>
+    <Variant id="@+id/closed" parent="@id/base">
+        <Visibility isVisible="false"/>
+    </Variant>
+    <Variant id="@+id/suw" parent="@id/closed">
+    </Variant>
+    <Variant id="@+id/userswitch" parent="@id/closed">
+    </Variant>
+    <Variant id="@+id/keyguard_opened" parent="@id/closed">
+    </Variant>
+    <Restart policy="LAST" maxRetry="3"/>
+    <TaskBehavior taskProperties="UNTRIMMABLE"/>
+    <Transitions>
+        <Transition toVariant="@id/suw" onEvent="_System_EnterSuwEvent"/>
+        <Transition fromVariant="@id/suw" toVariant="@id/opened" onEvent="_System_ExitSuwEvent"/>
+        <Transition fromVariant="@id/closed" toVariant="@id/opened" onEvent="_System_OnHomeEvent"/>
+        <Transition fromVariant="@id/opened" toVariant="@id/closed" onEvent="_System_TaskOpenEvent" onEventTokens="panelId=app_panel"/>
+        <Transition fromVariant="@id/closed" toVariant="@id/opened" onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId=app_panel"/>
+        <Transition fromVariant="@id/closed" toVariant="@id/opened" onEvent="_System_TaskOpenEvent" onEventTokens="panelId=map_panel"/>
+        <Transition toVariant="@id/userswitch" onEvent="_System_BeforeUserSwitch"/>
+        <Transition fromVariant="@id/userswitch" toVariant="@id/opened" onEvent="_System_UserSwitchComplete"/>
+        <Transition toVariant="@id/keyguard_opened" onEvent="_System_KeyguardShown"/>
+        <Transition fromVariant="@id/keyguard_opened" toVariant="@id/opened" onEvent="_System_KeyguardHidden"/>
+    </Transitions>
+</TaskPanel>

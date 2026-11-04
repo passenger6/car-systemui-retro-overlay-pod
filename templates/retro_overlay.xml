@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- Template for one-panel mode. Fill every {{...}} from the target task panel's XML:
+       {{TARGET}}        its id (map_panel)
+       {{DISPLAY_ID}}    its displayId
+       {{LAYER_PLUS_1}}  its <Layer layer=".."/> + 1
+       {{BOUNDS}}        the <Bounds .../> element of its visible variant, copied verbatim
+       {{COVERING_PANEL}} the task panel that opens over it (app_panel), repeat the pair of
+                         transitions for every such panel, delete them if there is none
+     Then add @xml/retro_overlay to window_states. -->
+<DecorPanel id="retro_overlay" defaultVariant="@id/off" displayId="{{DISPLAY_ID}}" controller="@xml/retro_overlay_controller">
+    <Variant id="@+id/base">
+        <Layer layer="{{LAYER_PLUS_1}}"/>
+        <Focus onTransition="false"/>
+        {{BOUNDS}}
+    </Variant>
+    <Variant id="@+id/on" parent="@id/base">
+        <Alpha alpha="1"/>
+        <Visibility isVisible="true"/>
+    </Variant>
+    <Variant id="@+id/off" parent="@id/base">
+        <Alpha alpha="0"/>
+        <Visibility isVisible="false"/>
+    </Variant>
+    <!-- paused: the target is covered or the screen is locked while the look is on. Invisible
+         like off, so the controller clears the look, and it comes back with the target. -->
+    <Variant id="@+id/paused" parent="@id/off">
+    </Variant>
+    <Transitions defaultInterpolator="@android:anim/decelerate_interpolator">
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_TaskOpenEvent" onEventTokens="panelId={{COVERING_PANEL}}"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_TaskPanelEmptyEvent" onEventTokens="panelId={{COVERING_PANEL}}"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_EnterSuwEvent"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_BeforeUserSwitch"/>
+        <Transition fromVariant="@id/on" toVariant="@id/paused" onEvent="_System_KeyguardShown"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_OnHomeEvent"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_TaskOpenEvent" onEventTokens="panelId={{TARGET}}"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_ExitSuwEvent"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_UserSwitchComplete"/>
+        <Transition fromVariant="@id/paused" toVariant="@id/on" onEvent="_System_KeyguardHidden"/>
+        <Transition toVariant="@id/on" duration="0" onEvent="retro_on"/>
+        <Transition toVariant="@id/off" duration="0" onEvent="retro_off"/>
+    </Transitions>
+</DecorPanel>

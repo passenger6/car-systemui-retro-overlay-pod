@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- DEWDLand's window_states (samples/DEWDLand/res-config/values/config.xml) plus the retro
+         overlay panel: @xml/retro_screen covers the whole display (every task panel),
+         @xml/retro_overlay follows map_panel alone; swap the item to switch. Declared twice like the reference: the flagged form is the one a build
+         with enable_ext_panel_updates reads, the plain one is the fallback. -->
+    <array name="window_states" android:featureFlag="com.android.car.scalableui.enable_ext_panel_updates">
+        <item>@xml/app_panel</item>
+        <item>@xml/map_panel</item>
+        <item>@xml/widget_panel</item>
+        <item>@xml/assistant_panel</item>
+        <item>@xml/unreactive_panel</item>
+        <item>@xml/hun_panel</item>
+        <item>@xml/projected_panel</item>
+        <item>@xml/retro_screen</item>
+        <item>@xml/status</item>
+        <item>@xml/nav</item>
+        <item>@xml/app_grid_panel</item>
+    </array>
+
+    <array name="window_states">
+        <item>@xml/app_panel</item>
+        <item>@xml/map_panel</item>
+        <item>@xml/widget_panel</item>
+        <item>@xml/assistant_panel</item>
+        <item>@xml/unreactive_panel</item>
+        <item>@xml/projected_panel</item>
+        <item>@xml/retro_screen</item>
+        <item>@xml/status</item>
+        <item>@xml/nav</item>
+        <item>@xml/app_grid_panel</item>
+    </array>
+
+    <!-- The pod's knobs (pods/retro-overlay/res/values/config.xml) overridden for this sample:
+         green phosphor on a curved tube. Diagnostic ladder on a new device, one step per build:
+           strips 0            tint + scanlines + glass edge, no mirrors, no cover
+           strips 24, no cover mirrors over the live app: do they draw at all?
+           strips 24, cover    the full barrel
+         Full barrel by default; drop to the lower steps when something looks wrong. -->
+    <string name="retro_preset">green-crt</string>
+    <!-- 55 (the pod's default) is a pale tint on the emulator's RenderEngine path; 80 reads
+         as phosphor without the scanlines going black. -->
+    <integer name="retro_intensity_percent">80</integer>
+    <!-- Curvature is its own knob: the barrel and the glass edge on top of the phosphor look. -->
+    <bool name="retro_curved">true</bool>
+    <!-- Whole-display mode: every strip mirrors a task with its input windows, and
+         SurfaceFlinger sends the whole window list to system_server in one oneway binder call
+         (~512 KB limit). 7 tasks x 48 strips x ~3 windows = ~1100 windows = 520 KB: the update
+         fails every frame, InputDispatcher keeps a stale list, and after a layout change a
+         panel stops taking taps. 24 strips = ~520 windows = 320 KB, delivered. One-panel mode
+         (retro_overlay) is 1 x 48 x 3 and can keep 48. -->
+    <integer name="retro_barrel_strips">24</integer>
+    <bool name="retro_barrel_cover">true</bool>
+    <!-- The "this is retro" cue on top of the curved look: grain, the VHS tracking bar and
+         the picture shaking under it. -->
+    <integer name="retro_noise_percent">30</integer>
+    <integer name="retro_noise_size_px">2</integer>
+    <integer name="retro_tracking_percent">70</integer>
+    <!-- No shake on the whole display: every jitter frame moves ~520 input windows, so
+         SurfaceFlinger resends the 320 KB list 30 times a second and the 1 MB binder buffer
+         fills up. One-panel mode can shake (50 looked right on map_panel). -->
+    <integer name="retro_jitter_percent">0</integer>
+    <!-- The barrel, three knobs:
+           bulge    how strong; 100 = the extension's 1.5 % at the edges, hard to see on 2560 px
+           outward  true = widest row in the middle (a tube), false = widest at top and bottom
+           fit      true = nothing leaves the screen, the narrow rows show black at the sides;
+                    false = the widest rows are cut at the screen edge, no black anywhere
+         This set: a tube, 2.3 % wide in the middle (~30 px cut per side at mid-height), no
+         black. For black bezels instead of cuts: fit=true, bulge 300, jitter 30. -->
+    <integer name="retro_barrel_bulge_percent">150</integer>
+    <bool name="retro_barrel_outward">true</bool>
+    <bool name="retro_barrel_fit">false</bool>
+    <dimen name="display_0_width">1920px</dimen>
+    <dimen name="display_0_height">1080px</dimen>
+</resources>

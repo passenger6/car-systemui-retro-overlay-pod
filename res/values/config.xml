@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<resources>
+    <!-- Retro overlay: which look the overlay panel applies to its target task panel.
+         One of: vhs, ntsc, scanlines, crt, curved-crt, green-crt, amber-crt, technicolor.
+         RRO-overridable per project. -->
+    <string name="retro_preset" translatable="false">green-crt</string>
+
+    <!-- Strength of the look, 0..100. The GNOME extension defaults to 55. -->
+    <integer name="retro_intensity_percent">55</integer>
+
+    <!-- Curved glass on top of any preset: the barrel of mirror strips and the rounded glass
+         edge, the geometry half of curved-crt without its scanlines and aperture mask.
+         curved-crt is curved regardless of this value. -->
+    <bool name="retro_curved">false</bool>
+
+    <!-- Distance between two dark scanlines, in display pixels. -->
+    <integer name="retro_scanline_spacing_px">6</integer>
+
+    <!-- Horizontal strips the curved-crt preset builds the barrel from. More strips
+         means a smoother curve and more layers for SurfaceFlinger to compose; 0 turns the
+         barrel off and leaves only the glass edge of the overlay. -->
+    <integer name="retro_barrel_strips">24</integer>
+
+    <!-- Opaque cover under the barrel's mirrors that hides the flat original. False is a
+         diagnostic: the mirrors draw over the live app, so one can see whether they draw
+         anything at all on a device. -->
+    <bool name="retro_barrel_cover">true</bool>
+
+    <!-- Added on top of any preset, 0..100 each; 0 keeps the preset as the extension has it.
+         Noise: film grain over the whole frame, new every frame.
+         Tracking: the VHS bar that crawls up the frame every few seconds, with noise inside
+         and a 2 px wobble of the lines while it passes. -->
+    <integer name="retro_noise_percent">0</integer>
+    <integer name="retro_tracking_percent">0</integer>
+
+    <!-- Size of one grain, display px. 1 is film-fine and nearly invisible on a 2560 px wide
+         display; 2..4 reads as noise at arm's length. -->
+    <integer name="retro_noise_size_px">1</integer>
+
+    <!-- Multiplier on the curved-crt barrel, 100 = the extension's 0.028 * intensity, which
+         on a wide display moves the edges by only ~1.5 %. 300 makes the barrel obvious. -->
+    <integer name="retro_barrel_bulge_percent">100</integer>
+
+    <!-- True: the barrel fits the task, the top and bottom rows at exactly its width and the
+         middle rows shrunk, so nothing leaves the screen and the cover shows as a black arc
+         at the sides (a tube's bezel). False: the extension's formula, edge rows stretched
+         outwards and cut off at the task's edge. -->
+    <bool name="retro_barrel_fit">false</bool>
+
+    <!-- True: the middle rows are the widest and the rows narrow towards the top and bottom,
+         the way a tube bulges (with fit: corners pulled in under black). False: the
+         extension's formula, the edge rows are the widest. -->
+    <bool name="retro_barrel_outward">false</bool>
+
+    <!-- The VHS shake, 0..100: the barrel's mirror strips move sideways a few px per frame
+         (the extension's per-band jitter) and get pulled under the tracking bar. Needs
+         retro_barrel_strips > 0; a strip is one band, so more strips = finer shake. -->
+    <integer name="retro_jitter_percent">0</integer>
+
+    <!-- Luma-only output on top of the preset's tint. -->
+    <bool name="retro_monochrome">false</bool>
+
+    <!-- Animate flicker, grain and tracking. Off: one still frame of the look. -->
+    <bool name="retro_animate">true</bool>
+</resources>
