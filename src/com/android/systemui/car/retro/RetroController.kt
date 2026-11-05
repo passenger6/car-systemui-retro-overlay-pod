@@ -222,7 +222,10 @@ class RetroController @AssistedInject constructor(
         }
         val knobsForView = knobs
         // The shader's uniforms belong to the view's thread, like its drawing.
-        view.post { view.configure(knobsForView, glassRadiusPx) }
+        view.post {
+            view.configure(knobsForView, glassRadiusPx)
+            view.setFramesEnabled(true)
+        }
 
         if (knobs.wantsBarrel) {
             val overlayBounds = panelUtils.getCurrentVariant(mPanelId)?.bounds
@@ -279,6 +282,7 @@ class RetroController @AssistedInject constructor(
     private fun releaseOnShell() {
         stopFrames()
         followingPanelIds.clear()
+        overlayView?.let { view -> view.post { view.setFramesEnabled(false) } }
         val transaction = SurfaceControl.Transaction()
         clearTint(transaction)
         barrel.hide(transaction)

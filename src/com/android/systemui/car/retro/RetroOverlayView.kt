@@ -45,6 +45,9 @@ class RetroOverlayView @JvmOverloads constructor(
     // (null) getter, the view's field is shadowed, and drawRect then fills opaque black.
     private val paint = Paint().also { it.shader = shader }
     private var animated = false
+    // Hiding the panel hides its leash, not the view: HWUI would keep drawing 60 frames a
+    // second into a surface nobody sees. The controller switches frames off with the look.
+    private var framesEnabled = false
 
     init {
         // A View skips onDraw until it has a background or asks for it explicitly.
@@ -81,6 +84,14 @@ class RetroOverlayView @JvmOverloads constructor(
         invalidate()
     }
 
+    /** View thread. Frames run only while the look is on; off, the view draws once and stops. */
+    fun setFramesEnabled(enabled: Boolean) {
+        if (framesEnabled == enabled) return
+        framesEnabled = enabled
+        Log.i(TAG, "[retro] overlay frames ${if (enabled) "enabled" else "disabled"}")
+        invalidate()
+    }
+
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         val host = rootSurfaceControl
@@ -104,7 +115,7 @@ class RetroOverlayView @JvmOverloads constructor(
         shader.setFloatUniform("time", seconds)
         shader.setFloatUniform("trackingBar", bar.center, bar.width, bar.strength)
         canvas.drawRect(0f, 0f, width.toFloat(), height.toFloat(), paint)
-        if (animated) {
+        if (animated && framesEnabled) {
             postInvalidateOnAnimation()
         }
     }
